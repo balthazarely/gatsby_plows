@@ -1,0 +1,48 @@
+.feature__container {
+  @apply container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.page__container {
+  @apply container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-40;
+}
+
+.blog__container {
+  @apply container max-w-3xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.active--nav {
+  @apply text-theme-300;
+}
+
+.transition-300 {
+  @apply transition-all ease-in-out duration-300;
+}
+
+.standard-transition {
+  @apply transition-all ease-in-out duration-200;
+}
+
+.bord {
+  @apply border-2 border-red-500;
+}
+
+.btn--hover--translate {
+  @apply transform duration-200 transition hover:-translate-y-0.5;
+}
+
+.no--select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.ohnohoney {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 0;
+  width: 0;
+  z-index: -50;
+}

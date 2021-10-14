@@ -1,0 +1,48 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+  branches:
+    include:
+      - master
+variables:
+  - group: plow-ops-production-env
+stages:
+  - stage: __default
+    jobs:
+      - job: Job
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '12.13.0'
+            displayName: 'Install Node.js'
+          - task: CmdLine@2
+            displayName: 'npm install and export'
+            inputs:
+              script: |
+                npm install
+                npm run build
+            env:
+              GATSBY_ENV_AWS_CONTACT_FORM_API_GATEWAY: $(GATSBY_ENV_AWS_CONTACT_FORM_API_GATEWAY)
+              GATSBY_ENV_MAPBOX_TOKEN: $(GATSBY_ENV_MAPBOX_TOKEN)    
+          - task: S3Upload@1
+            inputs:
+              regionName: 'us-west-2'
+              bucketName: 'test.plowops.com'
+              sourceFolder: 'public'
+              globExpressions: |
+                **
+                !vendor/**
+              filesAcl: 'public-read'
+            displayName: 'AWS S3 - Upload Files'
+          - task: AWSCLI@1
+            inputs:
+              regionName: 'us-west-2'
+              awsCommand: 'cloudfront'
+              awsSubCommand: 'create-invalidation'
+              awsArguments: '--distribution-id E1VFFWO5O48LT0 --paths /*'
+            displayName: 'AWS CloudFront - Create Invalidation'
